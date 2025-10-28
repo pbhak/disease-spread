@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+/** A community of individuals */
 public class Community {
     ArrayList<Person> people;
 
