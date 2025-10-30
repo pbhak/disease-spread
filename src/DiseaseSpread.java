@@ -11,14 +11,18 @@ public class DiseaseSpread extends PApplet {
 
     public void setup() {
         ArrayList<Person> people = new ArrayList<>();
-        for (int i = 0; i < 50; i++) people.add(new Person().setX(100).setY(100).setSpeed(5));
+        people.add(new Person().setX(400).setY(400).setSpeed(2).setSize(25).setInfected(true));
+        for (int x = 30; x < height; x += 80) {
+            for (int y = 30; y < width; y += 80) {
+                people.add(new Person().setX(x).setY(y).setSpeed(1).setSize(25));
+            }
+        }
         community = new Community(people);
     }
 
     public void draw() {
-        for (Person person : community.people) person.draw(this);
-        // where i left off: currently, the values that x and y are incremented by are both positive.
-        // this means the particle will always travel diagonally bottom-right.
+        background(255);
+        community.drawMembers(this);
     }
 
 
