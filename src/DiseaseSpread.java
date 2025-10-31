@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class DiseaseSpread extends PApplet {
     Community community;
+    TextDisplay textDisplay; // secondary text display window
 
     public void settings() {
         size(800, 800);
@@ -17,6 +18,9 @@ public class DiseaseSpread extends PApplet {
                 people.add(new Person().setX(x).setY(y).setSpeed(1).setSize(25));
         }
         community = new Community(people);
+
+        textDisplay = new TextDisplay(community);
+        PApplet.runSketch(new String[]{"TextDisplay"}, textDisplay);
     }
 
     public void draw() {

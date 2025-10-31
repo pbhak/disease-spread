@@ -44,6 +44,8 @@ public class Person {
 
     public boolean healthy() { return !infected && !removed; }
 
+    public boolean removed() { return removed; }
+
     public int getDaysSinceInfected() { return daysSinceInfected; }
 
     public Person setInfected(boolean infected) {

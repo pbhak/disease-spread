@@ -28,4 +28,22 @@ public class Community {
             person.draw(window);
         }
     }
+
+    public int getHealthy() {
+        int healthy = 0;
+        for (Person person : people) if (person.healthy()) healthy++;
+        return healthy;
+    }
+
+    public int getInfected() {
+        int infected = 0;
+        for (Person person : people) if (person.infected()) infected++;
+        return infected;
+    }
+
+    public int getRemoved() {
+        int removed = 0;
+        for (Person person : people) if (person.removed()) removed++;
+        return removed;
+    }
 }
