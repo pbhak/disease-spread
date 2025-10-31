@@ -12,15 +12,16 @@ public class DiseaseSpread extends PApplet {
 
     public void setup() {
         ArrayList<Person> people = new ArrayList<>();
-        people.add(new Person().setX(400).setY(400).setSpeed(2).setSize(25).setInfected(true));
         for (int x = 30; x < height; x += 80) {
             for (int y = 30; y < width; y += 80)
-                people.add(new Person().setX(x).setY(y).setSpeed(1).setSize(25));
+                people.add(new Person().setX(x).setY(y));
         }
         community = new Community(people);
 
         textDisplay = new TextDisplay(community);
         PApplet.runSketch(new String[]{"TextDisplay"}, textDisplay);
+
+        surface.setLocation(450, 15);
     }
 
     public void draw() {

@@ -2,10 +2,13 @@ import processing.core.PApplet;
 
 /** An individual person */
 public class Person {
-    private float x, y, speed, size;
+    public static final float size = 25;
+    public static final float speed = 1;
+    public static double probabilityOfSpread = 0.0002;
+
+    private float x, y;
     private int daysSinceInfected;
     private boolean infected, removed;
-    private double probabilityOfSpread;
 
     private float xTrajectory, yTrajectory;
 
@@ -19,23 +22,8 @@ public class Person {
         return this;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
-
     public float getRadius() {
         return size / 2;
-    }
-
-    public Person setSpeed(float speed) {
-        this.speed = speed;
-        return this;
-    }
-
-
-    public Person setSize(float size) {
-        this.size = size;
-        return this;
     }
 
     public boolean infected() {
@@ -46,26 +34,14 @@ public class Person {
 
     public boolean removed() { return removed; }
 
-    public int getDaysSinceInfected() { return daysSinceInfected; }
-
-    public Person setInfected(boolean infected) {
+    public void setInfected(boolean infected) {
         this.infected = infected;
-        return this;
-    }
-
-    public Person setRemoved(boolean removed) {
-        // by the rules of an SIR model, individuals are removed when they either
-        // recover or die from the infection
-        this.removed = removed;
-        return this;
-    }
-
-    public Person setProbabilityOfSpread(double probabilityOfSpread) {
-        this.probabilityOfSpread = probabilityOfSpread;
-        return this;
     }
 
     public void draw (PApplet window) {
+        // 0.02% chance of becoming infected per frame
+        if (Math.random() < probabilityOfSpread && healthy()) infected = true;
+
         if (xTrajectory == 0.0f || yTrajectory == 0.0f) {
             // the particle is not currently moving
             xTrajectory = (float) (Math.random() * (2 * speed) - speed);
@@ -78,7 +54,7 @@ public class Person {
         x += xTrajectory;
         y += yTrajectory;
 
-        if (daysSinceInfected > 250) {
+        if (daysSinceInfected > 250 && Math.random() < 0.05) {
             infected = false;
             removed = true;
         }
