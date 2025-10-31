@@ -18,6 +18,9 @@ public class Community {
                 if (person.isCollidingWith(otherPerson)) {
                     if (person.infected() && otherPerson.healthy()) otherPerson.setInfected(true);
                     if (otherPerson.infected() && person.healthy()) person.setInfected(true);
+
+                    person.correctOverlap(otherPerson);
+
                     person.reverseTrajectory();
                     otherPerson.reverseTrajectory();
                 }
