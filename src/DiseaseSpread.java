@@ -3,11 +3,13 @@ import processing.core.PApplet;
 import java.util.ArrayList;
 
 public class DiseaseSpread extends PApplet {
-    Community community;
+    Community community, community2;
     TextDisplay textDisplay; // secondary text display window
+    DataGraph dataGraph; // data plot window
+    SecondaryWindow secondaryWindow;
 
     public void settings() {
-        size(800, 800);
+        size(400, 400);
     }
 
     public void setup() {
@@ -17,16 +19,29 @@ public class DiseaseSpread extends PApplet {
                 people.add(new Person().setX(x).setY(y));
         }
         community = new Community(people);
+        community2 = new Community(people);
 
-        textDisplay = new TextDisplay(community);
+        textDisplay = new TextDisplay(community, this);
         PApplet.runSketch(new String[]{"TextDisplay"}, textDisplay);
 
-        surface.setLocation(450, 15);
+        surface.setLocation(610, 15);
+
+        dataGraph = new DataGraph(community).spawn(
+                580,
+                555,
+                "Change over time",
+                "Time (ms)",
+                "Count"
+        );
+
+        secondaryWindow = new SecondaryWindow(community2, 400, 400);
+        PApplet.runSketch(new String[]{"SecondaryWindow"}, secondaryWindow);
     }
 
     public void draw() {
         background(255);
         community.drawMembers(this);
+        if (!community.isMovementStopped()) dataGraph.redraw();
     }
 
 

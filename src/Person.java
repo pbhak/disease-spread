@@ -3,12 +3,13 @@ import processing.core.PApplet;
 /** An individual person */
 public class Person {
     public static final float size = 25;
-    public static final float speed = 1;
+    public static final float speed = 3;
     public static double probabilityOfSpread = 0.0002;
+    public static double probabilityOfQuarantine = 0.2;
 
     private float x, y;
     private int daysSinceInfected;
-    private boolean infected, removed;
+    private boolean infected, quarantined, removed, movementStopped;
 
     private float xTrajectory, yTrajectory;
 
@@ -30,11 +31,17 @@ public class Person {
         return infected;
     }
 
-    public boolean healthy() { return !infected && !removed; }
+    public boolean healthy() { return !infected && !removed && !quarantined; }
 
     public boolean removed() { return removed; }
 
+    public boolean quarantined() { return quarantined; }
+
     public void setInfected(boolean infected) {
+        if (infected && Math.random() < probabilityOfQuarantine) {
+            quarantined = true;
+            return;
+        }
         this.infected = infected;
     }
 
@@ -51,26 +58,35 @@ public class Person {
         if (x < getRadius() || x >= window.width - getRadius()) xTrajectory *= -1;
         else if (y < getRadius() || y >= window.height - getRadius()) yTrajectory *= -1;
 
-        x += xTrajectory;
-        y += yTrajectory;
+        if (!movementStopped) {
+            x += xTrajectory;
+            y += yTrajectory;
+        }
 
         if (daysSinceInfected > 250 && Math.random() < 0.05) {
             infected = false;
+            quarantined = false;
             removed = true;
         }
 
         if (infected) {
-            window.fill(169, 104, 48);
+//            window.fill(169, 104, 48);
+            window.fill(245, 103, 85);
             daysSinceInfected++;
         } else if (removed) {
             daysSinceInfected = 0;
-            window.fill(190, 142, 189);
+//            window.fill(190, 142, 189);
+            window.fill(68, 68, 68);
+        } else if (quarantined) {
+            window.fill(255, 255, 68);
+            daysSinceInfected += 2; // recover at double speed
         } else {
-            window.fill(178, 197, 201);
+//            window.fill(178, 197, 201);
+            window.fill(48, 97, 108);
         }
 
         window.noStroke();
-        window.ellipse(x, y, size, size);
+        if (!quarantined) window.ellipse(x, y, size, size);
     }
 
     public double getDistanceFrom(Person other) {
@@ -100,5 +116,9 @@ public class Person {
 
         other.x += unitDx * (overlap / 2);
         other.y += unitDy * (overlap / 2);
+    }
+
+    public void stopMovement() {
+        movementStopped = true;
     }
  }

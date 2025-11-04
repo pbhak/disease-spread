@@ -2,16 +2,18 @@ import processing.core.PApplet;
 
 public class TextDisplay extends PApplet {
     private final Community community;
+    private PApplet parent;
     long startTime;
     long experimentTime;
     long experimentFrameCount;
 
-    public TextDisplay(Community community) {
+    public TextDisplay(Community community, PApplet parent) {
         this.community = community;
+        this.parent = parent;
     }
 
     public void settings() {
-        size(400, 210);
+        size(580, 210);
     }
 
     public void setup() {
@@ -23,20 +25,21 @@ public class TextDisplay extends PApplet {
         background(255);
         fill(0);
         textAlign(LEFT, TOP);
-        textSize(20);
+        textSize(15);
         if (community.getRemoved() == community.getNumMembers())
             text("All members have been removed", 20, 20);
         else {
             // this prevents the values from incrementing after all members are removed
             experimentTime = (System.currentTimeMillis() - startTime) / 1000;
-            experimentFrameCount = frameCount;
+            experimentFrameCount = parent.frameCount;
 
             text("Healthy: " + community.getHealthy(), 20, 20);
-            text("Infected: " + community.getInfected(), 20, 50);
-            text("Removed: " + community.getRemoved(), 20, 80);
+            text("Infected: " + community.getInfected(), 20, 45);
+            text("Removed: " + community.getRemoved(), 20, 70);
+            text("Quarantined: " + community.getQuarantined(), 20, 95);
         }
-        text("Total members: " + community.getNumMembers(), 20, 110);
-        text("Time elapsed: " + experimentTime + "s", 20, 140);
-        text("Frame: " + experimentFrameCount + " (" + Math.round(frameRate) + "fps)", 20, 170);
+        text("Total members: " + community.getNumMembers(), 20, 120);
+        text("Time elapsed: " + experimentTime + "s", 20, 145);
+        text("Frame: " + experimentFrameCount + " (" + Math.round(parent.frameRate) + "fps)", 20, 170);
     }
 }

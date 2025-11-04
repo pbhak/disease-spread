@@ -5,13 +5,19 @@ import java.util.ArrayList;
 /** A community of individuals */
 public class Community {
     private final ArrayList<Person> people;
+    private long startTime;
+    private boolean movementStopped;
 
     public Community(ArrayList<Person> people) {
         this.people = people;
+        movementStopped = false;
     }
 
-    public void drawMembers(PApplet window) {
+    public long getStartTime() { return startTime; }
 
+    public void drawMembers(PApplet window) {
+        if (startTime == 0L) startTime = System.currentTimeMillis();
+        if (getNumMembers() == getRemoved()) stopAllMovement();
 
         for (int i = 0; i < people.size(); i++) {
             Person person = people.get(i);
@@ -49,7 +55,22 @@ public class Community {
         return removed;
     }
 
+    public int getQuarantined() {
+        int quarantined = 0;
+        for (Person person : people) if (person.quarantined()) quarantined++;
+        return quarantined;
+    }
+
     public int getNumMembers() {
         return people.size();
+    }
+
+    public void stopAllMovement() {
+        if (!movementStopped) movementStopped = true;
+        for (Person person : people) person.stopMovement();
+    }
+
+    public boolean isMovementStopped() {
+        return movementStopped;
     }
 }
