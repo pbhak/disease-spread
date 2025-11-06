@@ -52,14 +52,14 @@ public class DataGraph {
                 .xAxisTitle(xTitle)
                 .yAxisTitle(yTitle)
                 .build();
-        // remove chart legend and change bg color
+        // remove chart legend, change bg color, change line colors
         chart.getStyler()
                 .setLegendVisible(false)
                 .setChartBackgroundColor(Color.white)
                 .setSeriesColors(new Color[]{
-                        new Color(178, 197, 201),
-                        new Color(169, 104, 48),
-                        new Color(190, 142, 189),
+                        new Color(48, 97, 108),
+                        new Color(245, 103, 85),
+                        new Color(68, 68, 68),
                         new Color(255, 255, 68)
                 });
 

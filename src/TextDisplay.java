@@ -3,9 +3,9 @@ import processing.core.PApplet;
 public class TextDisplay extends PApplet {
     private final Community community;
     private PApplet parent;
-    long startTime;
-    long experimentTime;
-    long experimentFrameCount;
+    private long startTime;
+    private long experimentTime;
+    private long experimentFrameCount;
 
     public TextDisplay(Community community, PApplet parent) {
         this.community = community;
@@ -34,6 +34,11 @@ public class TextDisplay extends PApplet {
             experimentFrameCount = parent.frameCount;
 
             text("Healthy: " + community.getHealthy(), 20, 20);
+            text("Speed: " + community.getSpeed() + " (<a, d> to adjust)", 180, 20);
+            text("Chance of random infection: " +
+                    community.getProbabilityOfInfection() * 100 +
+                    "% (<j, l> to adjust)", 180, 45);
+
             text("Infected: " + community.getInfected(), 20, 45);
             text("Removed: " + community.getRemoved(), 20, 70);
             text("Quarantined: " + community.getQuarantined(), 20, 95);

@@ -3,13 +3,12 @@ import processing.core.PApplet;
 import java.util.ArrayList;
 
 public class DiseaseSpread extends PApplet {
-    Community community, community2;
+    Community community;
     TextDisplay textDisplay; // secondary text display window
     DataGraph dataGraph; // data plot window
-    SecondaryWindow secondaryWindow;
 
     public void settings() {
-        size(400, 400);
+        size(800, 800);
     }
 
     public void setup() {
@@ -19,7 +18,6 @@ public class DiseaseSpread extends PApplet {
                 people.add(new Person().setX(x).setY(y));
         }
         community = new Community(people);
-        community2 = new Community(people);
 
         textDisplay = new TextDisplay(community, this);
         PApplet.runSketch(new String[]{"TextDisplay"}, textDisplay);
@@ -33,15 +31,20 @@ public class DiseaseSpread extends PApplet {
                 "Time (ms)",
                 "Count"
         );
-
-        secondaryWindow = new SecondaryWindow(community2, 400, 400);
-        PApplet.runSketch(new String[]{"SecondaryWindow"}, secondaryWindow);
     }
 
     public void draw() {
         background(255);
         community.drawMembers(this);
         if (!community.isMovementStopped()) dataGraph.redraw();
+    }
+
+    public void keyPressed() {
+        if (keyCode == ESC) exit();
+        else if (key == 'a' || key == 'A') community.changeSpeedBy(-0.25f);
+        else if (key == 'd' || key == 'D') community.changeSpeedBy(0.25f);
+        else if (key == 'j' || key == 'J') community.changeProbabilityOfSpreadBy(-0.01);
+        else if (key == 'l' || key == 'L') community.changeProbabilityOfSpreadBy(0.01);
     }
 
 

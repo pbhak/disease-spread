@@ -1,17 +1,37 @@
 import processing.core.PApplet;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /** An individual person */
 public class Person {
-    public static final float size = 25;
-    public static final float speed = 3;
-    public static double probabilityOfSpread = 0.0002;
-    public static double probabilityOfQuarantine = 0.2;
+    private float size = 25;
+    private float speed;
+    private double probabilityOfSpread = 0.05;
+    public double probabilityOfQuarantine = 0.2;
 
     private float x, y;
     private int daysSinceInfected;
     private boolean infected, quarantined, removed, movementStopped;
 
     private float xTrajectory, yTrajectory;
+
+    public Person() { speed = 2; }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+        recalculateTrajectory();
+    }
+
+    public void setProbabilityOfSpread(double probabilityOfSpread) {
+        if (probabilityOfSpread < 0) {
+            this.probabilityOfSpread = 0;
+            return;
+        } else if (probabilityOfSpread > 1) {
+            this.probabilityOfSpread = 1;
+            return;
+        }
+        this.probabilityOfSpread = roundToTwo(probabilityOfSpread);
+    }
 
     public Person setX(float x) {
         this.x = x;
@@ -26,6 +46,10 @@ public class Person {
     public float getRadius() {
         return size / 2;
     }
+
+    public float getSpeed() { return speed; }
+
+    public double getProbabilityOfSpread() { return probabilityOfSpread; }
 
     public boolean infected() {
         return infected;
@@ -47,13 +71,9 @@ public class Person {
 
     public void draw (PApplet window) {
         // 0.02% chance of becoming infected per frame
-        if (Math.random() < probabilityOfSpread && healthy()) infected = true;
+        if (Math.random() < (probabilityOfSpread / window.frameRate) && healthy()) infected = true;
 
-        if (xTrajectory == 0.0f || yTrajectory == 0.0f) {
-            // the particle is not currently moving
-            xTrajectory = (float) (Math.random() * (2 * speed) - speed);
-            yTrajectory = (float) (Math.random() * (2 * speed) - speed);
-        }
+        if (xTrajectory == 0.0f || yTrajectory == 0.0f) recalculateTrajectory();
 
         if (x < getRadius() || x >= window.width - getRadius()) xTrajectory *= -1;
         else if (y < getRadius() || y >= window.height - getRadius()) yTrajectory *= -1;
@@ -118,7 +138,17 @@ public class Person {
         other.y += unitDy * (overlap / 2);
     }
 
-    public void stopMovement() {
-        movementStopped = true;
+    public void stopAllMovement() {
+        movementStopped = false;
+    }
+
+    void recalculateTrajectory() {
+        xTrajectory = (float) (Math.random() * (2 * speed) - speed);
+        yTrajectory = (float) (Math.random() * (2 * speed) - speed);
+    }
+
+    double roundToTwo(double value) {
+        // ugly rounding code i found on stack overflow
+        return new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
  }
