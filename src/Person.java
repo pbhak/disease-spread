@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 
 /** An individual person */
 public class Person {
@@ -14,6 +15,8 @@ public class Person {
     private boolean infected, quarantined, removed, movementStopped;
 
     private float xTrajectory, yTrajectory;
+
+    private int spreadCount;
 
     public Person() { speed = 2; }
 
@@ -71,7 +74,7 @@ public class Person {
 
     public void draw (PApplet window) {
         // 0.02% chance of becoming infected per frame
-        if (Math.random() < (probabilityOfSpread / window.frameRate) && healthy()) infected = true;
+        if (Math.random() < (probabilityOfSpread / window.frameRate) && healthy() && !movementStopped) infected = true;
 
         if (xTrajectory == 0.0f || yTrajectory == 0.0f) recalculateTrajectory();
 
@@ -83,7 +86,7 @@ public class Person {
             y += yTrajectory;
         }
 
-        if (daysSinceInfected > 250 && Math.random() < 0.05) {
+        if (daysSinceInfected > 250 && Math.random() < 0.05 && !movementStopped) {
             infected = false;
             quarantined = false;
             removed = true;
@@ -142,6 +145,8 @@ public class Person {
         movementStopped = false;
     }
 
+    public void startMovement() { movementStopped = true; }
+
     void recalculateTrajectory() {
         xTrajectory = (float) (Math.random() * (2 * speed) - speed);
         yTrajectory = (float) (Math.random() * (2 * speed) - speed);
@@ -150,5 +155,15 @@ public class Person {
     double roundToTwo(double value) {
         // ugly rounding code i found on stack overflow
         return new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public void incrementSpreadCount() {
+        this.spreadCount++;
+    }
+
+    public static double getR0(ArrayList<Person> people) {
+        double totalSpreadCount = 0;
+        for (Person person : people) totalSpreadCount += person.spreadCount;
+        return totalSpreadCount / people.size();
     }
  }

@@ -38,6 +38,8 @@ public class TextDisplay extends PApplet {
             text("Chance of random infection: " +
                     community.getProbabilityOfInfection() * 100 +
                     "% (<j, l> to adjust)", 180, 45);
+            text("<space> to pause/play simulation", 180, 70);
+            text("R0: " + community.getR0(), 180, 120);
 
             text("Infected: " + community.getInfected(), 20, 45);
             text("Removed: " + community.getRemoved(), 20, 70);

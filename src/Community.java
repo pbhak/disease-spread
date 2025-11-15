@@ -24,8 +24,14 @@ public class Community {
             for (int j = i + 1; j < people.size(); j++) {
                 Person otherPerson = people.get(j);
                 if (person.isCollidingWith(otherPerson)) {
-                    if (person.infected() && otherPerson.healthy()) otherPerson.setInfected(true);
-                    if (otherPerson.infected() && person.healthy()) person.setInfected(true);
+                    if (person.infected() && otherPerson.healthy()) {
+                        otherPerson.setInfected(true);
+                        otherPerson.incrementSpreadCount();
+                    }
+                    if (otherPerson.infected() && person.healthy()) {
+                        person.setInfected(true);
+                        person.incrementSpreadCount();
+                    }
 
                     person.correctOverlap(otherPerson);
 
@@ -70,6 +76,16 @@ public class Community {
         for (Person person : people) person.stopAllMovement();
     }
 
+    public void restartMovement() {
+        movementStopped = false;
+        for (Person person : people) person.startMovement();
+    }
+
+    public void toggleMovement() {
+        if (movementStopped) restartMovement();
+        else stopAllMovement();
+    }
+
     public void changeSpeedBy(float changeFactor) {
         for (Person person : people) person.setSpeed(person.getSpeed() + changeFactor);
     }
@@ -77,6 +93,10 @@ public class Community {
     public void changeProbabilityOfSpreadBy(double changeFactor) {
         for (Person person : people)
             person.setProbabilityOfSpread(person.getProbabilityOfSpread() + changeFactor);
+    }
+
+    public double getR0() {
+        return Person.getR0(people);
     }
 
     public float getSpeed() { return people.get(0).getSpeed(); }

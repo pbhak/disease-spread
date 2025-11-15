@@ -34,9 +34,13 @@ public class DiseaseSpread extends PApplet {
     }
 
     public void draw() {
+        this.frame.requestFocus();
+        this.frame.requestFocusInWindow();
+
         background(255);
+
         community.drawMembers(this);
-        if (!community.isMovementStopped()) dataGraph.redraw();
+        dataGraph.redraw();
     }
 
     public void keyPressed() {
@@ -45,6 +49,7 @@ public class DiseaseSpread extends PApplet {
         else if (key == 'd' || key == 'D') community.changeSpeedBy(0.25f);
         else if (key == 'j' || key == 'J') community.changeProbabilityOfSpreadBy(-0.01);
         else if (key == 'l' || key == 'L') community.changeProbabilityOfSpreadBy(0.01);
+        else if (key == ' ') community.toggleMovement();
     }
 
 
